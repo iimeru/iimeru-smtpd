@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"flag"
+	"fmt"
 	"github.com/iimeru/go-guerrilla"
 	"io/ioutil"
 	"log"
@@ -11,10 +12,16 @@ import (
 
 func main() {
 	configure()
-	goguerrilla.Run(gConfig, saveMail)
+	goguerrilla.Run(gConfig)
+
+	for i := 0; i < 3; i++ {
+		go saveMail()
+	}
 }
 
-func saveMail(saveMailChan chan *goguerrilla.Mail) {
+func saveMail() {
+	mail := <-goguerrilla.ProcessMailChan
+	fmt.Println(mail.Subject)
 }
 
 var gConfig = map[string]string{
